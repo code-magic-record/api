@@ -13,6 +13,10 @@ app.use(morgan("short")); // 使用日志
 
 app.use("/", routes);
 
+app.get('/', (req, res) => {
+  res.send('server is running')
+})
+
 app.listen(3000, () => {
   console.log("http://localhost:3000");
 });
