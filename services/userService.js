@@ -1,6 +1,7 @@
 const { validationResult, cookie } = require("express-validator"); // 字段校验插件
 const dayjs = require("dayjs");
 const md5 = require("../utils/md5");
+const redis = require("../redis/index");
 
 const knex = require("../db/index");
 const { logger } = require("../middleware/log");
@@ -48,10 +49,10 @@ async function addUser(options) {
 async function register(req, res) {
   const err = validationResult(req);
   if (!err.isEmpty()) {
-    const [{ msg }] = err.errors;
+    const [{ message }] = err.errors;
     res.send({
       code: 400,
-      msg,
+      message,
     });
   }
   const { username, password, email, nickname, avatar } = req.body;
@@ -61,7 +62,7 @@ async function register(req, res) {
     if (flag) {
       res.send({
         code: 400,
-        msg: "该用户已存在",
+        message: "该用户已存在",
       });
       return;
     }
@@ -75,14 +76,131 @@ async function register(req, res) {
     if (id) {
       res.send({
         code: 200,
-        msg: "注册成功",
+        message: "注册成功",
       });
     }
   } catch (e) {
+    logger.error(e);
+  }
+}
+
+
+/**
+ * 检测用户是否存在
+ * @param {*} username 
+ * @param {*} password 
+ * @returns 
+ */
+async function checkUser(username, password) {
+  try {
+    const result = await knex("user")
+      .select("id", "username", "password")
+      .where("username", username);
+    if (result.length > 0) {
+      const { password: hashPassword } = result[0];
+      const flag = await md5.compare(password, hashPassword);
+      return flag;
+    }
+    return false;
+  } catch (error) {
+    logger.error(error);
+  }
+}
+
+// 存储用户数据和JWT令牌到Redis
+const storeUserDataInRedis = async (key, userData, expiresIn) => {
+  try {
+    // 将用户数据转换为字符串
+    const userDataString = JSON.stringify(userData);
+    // 设置用户数据和令牌到Redis并设置过期时间
+    await redis.set(key, userDataString, 'EX', expiresIn);
+    console.log('userDataString', userDataString)
+    logger.info('User data and JWT token stored in Redis');
+  } catch (error) {
+    logger.error('Error storing user data and JWT token in Redis:');
+  }
+};
+
+/**
+ * 获取用户数据
+ * @param {*} username 
+ * @returns 
+ */
+const getUserDataFromMysql = async (username) => {
+  try {
+    // 从mysql获取用户数据
+    const userData = await knex('user')
+      .select('id', 'username', 'email', 'nickname', 'avatar')
+      .where('username', username);
+    logger.info('User data retrieved from MySQL');
+    return userData;
+  } catch (error) {
+    logger.info('Error retrieving user data from MySQL:');
+  }
+};
+
+// 用户登录
+async function login(req, res) {
+  const err = validationResult(req);
+  if (!err.isEmpty()) {
+    const [{ message }] = err.errors;
+    res.send({
+      code: 400,
+      message,
+    });
+  }
+  const { username, password } = req.body;
+  try {
+    const flag = await checkUser(username, password);
+    if (flag) {
+      const token = await md5.createToken(username);
+      const userData = await getUserDataFromMysql(username);
+      res.cookie("token", token, {
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7天
+        httpOnly: true,
+      });
+      // 将用户数据和JWT令牌存储到Redis
+      await storeUserDataInRedis(token, userData[0], 7 * 24 * 60 * 60);
+      res.send({
+        code: 200,
+        message: "登录成功",
+        token,
+      });
+    }
+  } catch(e) {
     logger.info(e);
   }
 }
 
+/**
+ * 获取用户信息
+ */
+async function userInfo(req, res) {
+  const { user } = req;
+  res.send({
+    code: 200,
+    message: "获取用户信息成功",
+    data: user,
+  })
+}
+
+/**
+ * 退出登录
+ */
+async function logout(req, res) {
+  const { token } = req.cookies;
+  res.clearCookie("token");
+  await redis.del(token);
+  res.send({
+    code: 200,
+    message: "退出登录成功",
+  })
+  //
+}
+
 module.exports = {
   register,
+  login,
+  logout,
+  userInfo,
 };

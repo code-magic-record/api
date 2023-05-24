@@ -1,4 +1,9 @@
 const bcrypt = require("bcrypt"); // 加密算法
+const jwt = require('jsonwebtoken');
+const dotenv = require("dotenv");
+dotenv.config();
+
+const { JWT_SECRET } = process.env
 
 const saltRounds = 10;
 
@@ -23,6 +28,13 @@ const md5 = {
       });
     });
   },
+  // jwt 生成token
+  createToken: function(payload, options = {}) {
+    return new Promise((resolve, reject) => {
+      const token = jwt.sign(payload, JWT_SECRET, { ...options });
+      resolve(token);
+    });
+  }
 };
 
 module.exports = md5;

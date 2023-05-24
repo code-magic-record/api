@@ -1,28 +1,37 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const redis = require("../../redis")
 dotenv.config();
 
-function authMiddleware(req, res, next) {
-  const authHeader = req.headers.authorization;
+const { JWT_SECRET } = process.env;
 
-  if (!authHeader) {
+async function authMiddleware(req, res, next) {
+  const { token: accessToken } = req.cookies;
+  if (!accessToken) {
     return res.status(401).json({
-      message: "Authorization header is missing",
+      code: 0,
+      message: "accessToken is missing",
     });
   }
-
-  const accessToken = authHeader.split(" ")[1];
-  let decodedToken;
-
   try {
-    decodedToken = jwt.verify(accessToken, process.env.JWT_SECRET);
-    // TODO: 校验数据是否一致
+    const userStr = await redis.get(accessToken)
+    const user = JSON.parse(userStr)
+    if(!user) {
+      return res.status(401).json({
+        code: 0,
+        message: "获取用户信息失败！",
+      });
+    }
+    req.user = user; // 将用用户信息传递下去
     next();
   } catch (err) {
     return res.status(401).json({
-      message: "Invalid access token",
+      code: 0,
+      message: "获取用户信息失败！",
     });
   }
 }
 
-module.exports = authMiddleware;
+module.exports = {
+  authMiddleware,
+};

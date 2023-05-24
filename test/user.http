@@ -10,3 +10,21 @@ post {{url}}/register
   "username": "yaogengzhu23",
   "password": "123456"
 }
+
+
+
+### 用户登录
+post {{url}}/login
+{{json}}
+
+{
+  "username": "yaogengzhu23",
+  "password": "123456"
+}
+
+### 获取用户信息
+
+get {{url}}/userInfo
+
+### 退出登录
+POST {{url}}/logout
