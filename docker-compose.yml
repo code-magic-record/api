@@ -9,6 +9,6 @@ services:
     ports:
       - 8001:8001
     environment:
-      - NODE_ENV=development
+      - TZ=Asia/Shanghai # 时区设置为东八区
     volumes:
       - .:/app
