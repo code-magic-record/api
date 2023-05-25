@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const routes = require("./routes/index");
-const redis = require("./redis/index");
 const { loggerMiddleware } = require("./middleware/log/index");
 
 const app = express();

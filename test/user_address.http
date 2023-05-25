@@ -5,15 +5,36 @@
 
 get {{url}}/address
 
+### 新增地址
 
-
-### 编辑地址
-
-post {{url}}/address
+post {{url}}/add/address
 {{json}}
 
 {
   "state": "湖北省",
-  "city": "武汉市",
-  "address": "江夏区，凤凰花园3期"
+  "city": "大冶市",
+  "address": "下陆区铁山街道"
+}
+
+
+### 删除地址
+
+post {{url}}/del/address
+{{json}}
+
+{
+  "id": "1"
+}
+
+
+### 编辑地址
+
+post {{url}}/edit/address
+{{json}}
+
+{
+  "id": "5",
+  "state": "湖北省",
+  "city": "大冶市",
+  "address": "下陆区铁山街道1223"
 }
