@@ -1,10 +1,8 @@
-FROM node:16
+FROM node:18
 
 WORKDIR /app
 
 COPY . /app
-
-RUN npm i yarn -g
 
 RUN yarn
 
