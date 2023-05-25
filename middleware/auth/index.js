@@ -3,8 +3,6 @@ const dotenv = require("dotenv");
 const redis = require("../../redis")
 dotenv.config();
 
-const { JWT_SECRET } = process.env;
-
 async function authMiddleware(req, res, next) {
   const { token: accessToken } = req.cookies;
   if (!accessToken) {

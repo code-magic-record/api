@@ -1,4 +1,4 @@
-const { validationResult, cookie } = require("express-validator"); // 字段校验插件
+const { validationResult } = require("express-validator"); // 字段校验插件
 const dayjs = require("dayjs");
 const md5 = require("../utils/md5");
 const redis = require("../redis/index");

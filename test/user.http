@@ -1,4 +1,4 @@
-@url=http://localhost:8000/api/
+@url=http://localhost:8001/api/user
 @json=Content-Type: application/json
 
 
@@ -7,7 +7,7 @@ post {{url}}/register
 {{json}}
 
 {
-  "username": "yaogengzhu23",
+  "username": "yaogengzhu233",
   "password": "123456"
 }
 

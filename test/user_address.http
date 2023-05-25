@@ -1,0 +1,19 @@
+@url=http://localhost:8001/api/user
+@json=Content-Type: application/json
+
+### 获取用户地址
+
+get {{url}}/address
+
+
+
+### 编辑地址
+
+post {{url}}/address
+{{json}}
+
+{
+  "state": "湖北省",
+  "city": "武汉市",
+  "address": "江夏区，凤凰花园3期"
+}
