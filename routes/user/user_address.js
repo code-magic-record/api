@@ -1,9 +1,8 @@
 const express = require("express");
 const { body } = require("express-validator");
 const router = express.Router();
-const service = require("../services/userAddressService");
-
-const { authMiddleware } = require("../middleware/auth/index");
+const service = require("../../services/user/userAddressService");
+const { authMiddleware } = require("../../middleware/auth/index");
 
 // 添加/编辑地址
 const addressVaildator = [

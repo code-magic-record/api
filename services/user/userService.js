@@ -1,10 +1,10 @@
 const { validationResult } = require("express-validator"); // 字段校验插件
 const dayjs = require("dayjs");
-const md5 = require("../utils/md5");
-const redis = require("../redis/index");
+const md5 = require("../../utils/md5");
+const redis = require("../../redis/index");
 
-const knex = require("../db/index");
-const { logger } = require("../middleware/log");
+const knex = require("../../db/index");
+const { logger } = require("../../middleware/log");
 
 /**
  * 判断用户是否存在

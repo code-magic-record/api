@@ -10,7 +10,7 @@ app.use(bodyParser.json()); // 解析json
 app.use(cookieParser()); // 使用cookie
 app.use(loggerMiddleware); // 使用日志
 
-app.use("/api/user", routes);
+app.use("/api/", routes);
 
 app.get("/", async (req, res) => {
   res.send("server is running ");

@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator"); // 字段校验插件
 const dayjs = require("dayjs");
-const knex = require("../db/index");
-const { logger } = require("../middleware/log");
+const knex = require("../../db/index");
+const { logger } = require("../../middleware/log/index");
 
 /**
  * 查询地址根据userId

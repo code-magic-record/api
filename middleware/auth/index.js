@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const redis = require("../../redis")
 dotenv.config();

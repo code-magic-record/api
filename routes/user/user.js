@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
-const service = require("../services/userService");
-const { authMiddleware } = require("../middleware/auth"); // 鉴权信息中间件
+const service = require("../../services/user/userService");
+const { authMiddleware } = require("../../middleware/auth"); // 鉴权信息中间件
 
 // 登录/注册校验
 const vaildator = [
