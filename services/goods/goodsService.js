@@ -1,3 +1,4 @@
+const dayjs = require("dayjs");
 const knex = require("../../db/index");
 const { logger } = require("../../middleware/loggerMiddleware");
 
@@ -40,6 +41,36 @@ async function getGoodsWithId(id) {
   } catch (e) {
     logger.error(e);
     throw new Error("查询失败");
+  }
+}
+
+/**
+ * 插入商品
+ * @param {*} options
+ */
+async function insertGoods(options) {
+  const { categoryId, name, price, description, imgUrl } = options;
+  try {
+    // 获取当前最大的 goods_id
+    const maxGoodsIdResult = await knex("goods")
+      .max("goods_id as maxGoodsId")
+      .first();
+    const newGoodsId = (maxGoodsIdResult.maxGoodsId || 0) + 1;
+    const newGoods = {
+      goods_id: newGoodsId,
+      category_id: categoryId,
+      name,
+      price,
+      description,
+      main_image_url: imgUrl,
+      create_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      update_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+    };
+    const result = await knex("goods").insert(newGoods);
+    return result;
+  } catch (error) {
+    logger.error(error);
+    throw new Error("插入失败");
   }
 }
 
@@ -92,7 +123,37 @@ async function getGoodsDetail(req, res) {
   }
 }
 
+/**
+ * 添加商品
+ * @param {*} req
+ * @param {*} res
+ */
+async function addGoods(req, res) {
+  const { categoryId, name, price, description = "", imgUrl = "" } = req.body;
+  const newGoods = {
+    categoryId,
+    name,
+    price,
+    description,
+    imgUrl,
+  };
+  try {
+    const result = await insertGoods(newGoods);
+    console.log(result);
+    res.send({
+      code: 200,
+      message: "新增成功",
+    });
+  } catch (e) {
+    res.status(500).send({
+      code: 0,
+      message: e,
+    });
+  }
+}
+
 module.exports = {
   getGoodsList,
   getGoodsDetail,
+  addGoods,
 };

@@ -4,7 +4,7 @@
 | :------------: | :------------: | :--------------------------------------------: |
 |       id       |      int       |                   主键，自增                   |
 |  category_id   |      int       | 商品分类 ID，外键引用 `categories` 表中的 `id` |
-|    good_id     |  varchar(255)  |  商品唯一标识符，例如：G123 或 Product-XYZ-01  |
+|    good_id     |      int       |                    商品 id                     |
 |      name      |  varchar(255)  |                    商品名称                    |
 |     price      | decimal(12, 2) |                    商品单价                    |
 |  description   |      text      |                    商品描述                    |

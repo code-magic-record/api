@@ -1,6 +1,6 @@
 const express = require("express");
 const service = require("../../services/goods/goodsService");
-const { query } = require("express-validator");
+const { query, body } = require("express-validator");
 const {
   validationMiddleware,
 } = require("../../middleware/validationMiddleware");
@@ -24,6 +24,15 @@ const getGoodsDetailVaildator = [
   query("id").notEmpty().withMessage("商品id不能为空"),
 ];
 
+const goodsVaildtor = [
+  body("name").notEmpty().withMessage("商品名称不能为空"),
+  body("price")
+    .notEmpty()
+    .withMessage("商品价格不能为空")
+    .isNumeric()
+    .withMessage("商品价格必须是number"),
+];
+
 router.get(
   "/list",
   validationMiddleware(getGoodsValidator),
@@ -35,5 +44,8 @@ router.get(
   validationMiddleware(getGoodsDetailVaildator),
   service.getGoodsDetail
 ); // 获取商品详情
+
+// TODO: 先不做新增鉴权，后期超管才能新增
+router.post("/add", validationMiddleware(goodsVaildtor), service.addGoods); // 添加商品
 
 module.exports = router;

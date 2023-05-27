@@ -10,3 +10,13 @@ get {{url}}/list?page=1&pageSize=10
 
 get {{url}}/detail?id=1
 
+
+### 新增商品
+
+post {{url}}/add
+{{json}}
+
+{
+    "name": "香蕉",
+    "price": "1"
+}
