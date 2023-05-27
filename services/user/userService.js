@@ -1,10 +1,9 @@
-const { validationResult } = require("express-validator"); // 字段校验插件
 const dayjs = require("dayjs");
 const md5 = require("../../utils/md5");
 const redis = require("../../redis/index");
 
 const knex = require("../../db/index");
-const { logger } = require("../../middleware/log");
+const { logger } = require("../../middleware/loggerMiddleware");
 
 /**
  * 判断用户是否存在
@@ -47,14 +46,6 @@ async function addUser(options) {
 
 // 用户注册
 async function register(req, res) {
-  const err = validationResult(req);
-  if (!err.isEmpty()) {
-    const [{ message }] = err.errors;
-    res.send({
-      code: 400,
-      message,
-    });
-  }
   const { username, password, email, nickname, avatar } = req.body;
   try {
     const newPassword = await md5.hash(password); // 密码加密
@@ -84,12 +75,11 @@ async function register(req, res) {
   }
 }
 
-
 /**
  * 检测用户是否存在
- * @param {*} username 
- * @param {*} password 
- * @returns 
+ * @param {*} username
+ * @param {*} password
+ * @returns
  */
 async function checkUser(username, password) {
   try {
@@ -113,42 +103,34 @@ const storeUserDataInRedis = async (key, userData, expiresIn) => {
     // 将用户数据转换为字符串
     const userDataString = JSON.stringify(userData);
     // 设置用户数据和令牌到Redis并设置过期时间
-    await redis.set(key, userDataString, 'EX', expiresIn);
-    console.log('userDataString', userDataString)
-    logger.info('User data and JWT token stored in Redis');
+    await redis.set(key, userDataString, "EX", expiresIn);
+    console.log("userDataString", userDataString);
+    logger.info("User data and JWT token stored in Redis");
   } catch (error) {
-    logger.error('Error storing user data and JWT token in Redis:');
+    logger.error("Error storing user data and JWT token in Redis:");
   }
 };
 
 /**
  * 获取用户数据
- * @param {*} username 
- * @returns 
+ * @param {*} username
+ * @returns
  */
 const getUserDataFromMysql = async (username) => {
   try {
     // 从mysql获取用户数据
-    const userData = await knex('user')
-      .select('id', 'username', 'email', 'nickname', 'avatar')
-      .where('username', username);
-    logger.info('User data retrieved from MySQL');
+    const userData = await knex("user")
+      .select("id", "username", "email", "nickname", "avatar")
+      .where("username", username);
+    logger.info("User data retrieved from MySQL");
     return userData;
   } catch (error) {
-    logger.info('Error retrieving user data from MySQL:');
+    logger.info("Error retrieving user data from MySQL:");
   }
 };
 
 // 用户登录
 async function login(req, res) {
-  const err = validationResult(req);
-  if (!err.isEmpty()) {
-    const [{ message }] = err.errors;
-    res.send({
-      code: 400,
-      message,
-    });
-  }
   const { username, password } = req.body;
   try {
     const flag = await checkUser(username, password);
@@ -167,7 +149,7 @@ async function login(req, res) {
         token,
       });
     }
-  } catch(e) {
+  } catch (e) {
     logger.info(e);
   }
 }
@@ -181,7 +163,7 @@ async function userInfo(req, res) {
     code: 200,
     message: "获取用户信息成功",
     data: user,
-  })
+  });
 }
 
 /**
@@ -194,7 +176,7 @@ async function logout(req, res) {
   res.send({
     code: 200,
     message: "退出登录成功",
-  })
+  });
   //
 }
 

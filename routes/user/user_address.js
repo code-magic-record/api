@@ -2,7 +2,8 @@ const express = require("express");
 const { body } = require("express-validator");
 const router = express.Router();
 const service = require("../../services/user/userAddressService");
-const { authMiddleware } = require("../../middleware/auth/index");
+const { authMiddleware } = require("../../middleware/authMiddleware");
+const { validationMiddleware } = require("../../middleware/validationMiddleware");
 
 // 添加/编辑地址
 const addressVaildator = [
@@ -23,21 +24,21 @@ router.get("/address", authMiddleware, service.getUserAddress);
 router.post(
   "/add/address",
   authMiddleware,
-  addressVaildator,
+  validationMiddleware(addressVaildator),
   service.addUserAddress
 );
 // 编辑地址
 router.post(
   "/edit/address",
   authMiddleware,
-  editAddressVaildator,
+  validationMiddleware(editAddressVaildator),
   service.editUserAddress
 );
 // 删除地址
 router.post(
   "/del/address",
   authMiddleware,
-  deleteAddressVaildator,
+  validationMiddleware(deleteAddressVaildator),
   service.deleteUserAddress
 );
 

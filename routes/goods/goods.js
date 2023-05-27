@@ -1,6 +1,7 @@
 const express = require("express");
 const service = require("../../services/goods/goodsService");
 const { query } = require("express-validator");
+const { validationMiddleware } = require("../../middleware/validationMiddleware");
 
 const router = express.Router();
 
@@ -17,6 +18,6 @@ const getGoodsValidator = [
     .withMessage("pageSize必须是大于0的整数"),
 ];
 
-router.get("/get", getGoodsValidator, service.getGoodsList); // 获取商品列表
+router.get("/get_list", validationMiddleware(getGoodsValidator), service.getGoodsList); // 获取商品列表
 
 module.exports = router;

@@ -1,5 +1,5 @@
 const dotenv = require("dotenv");
-const redis = require("../../redis")
+const redis = require("../redis");
 dotenv.config();
 
 async function authMiddleware(req, res, next) {
@@ -11,9 +11,9 @@ async function authMiddleware(req, res, next) {
     });
   }
   try {
-    const userStr = await redis.get(accessToken)
-    const user = JSON.parse(userStr)
-    if(!user) {
+    const userStr = await redis.get(accessToken);
+    const user = JSON.parse(userStr);
+    if (!user) {
       return res.status(401).json({
         code: 0,
         message: "获取用户信息失败！",

@@ -2,19 +2,18 @@ const winston = require("winston");
 const DailyRotateFile = require("winston-daily-rotate-file");
 const onFinished = require("on-finished");
 const path = require("path");
-const dayjs = require('dayjs');
+const dayjs = require("dayjs");
 
 // 日志输出目录
-const logDir = path.resolve(__dirname, "../..", "logs");
+const logDir = path.resolve(__dirname, "../", "logs");
 
 /**
  * 时间格式化
  */
 const customFormat = winston.format.printf(({ level, message, timestamp }) => {
-  const formattedTimestamp = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
+  const formattedTimestamp = dayjs(timestamp).format("YYYY-MM-DD HH:mm:ss");
   return `[${formattedTimestamp}] ${level}: ${message}`;
 });
-
 
 // winston 格式化器
 const logFormat = winston.format.combine(

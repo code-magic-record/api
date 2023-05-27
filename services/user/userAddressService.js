@@ -1,7 +1,6 @@
-const { validationResult } = require("express-validator"); // 字段校验插件
 const dayjs = require("dayjs");
 const knex = require("../../db/index");
-const { logger } = require("../../middleware/log/index");
+const { logger } = require("../../middleware/loggerMiddleware");
 
 /**
  * 查询地址根据userId
@@ -96,15 +95,6 @@ async function getUserAddress(req, res) {
  * @returns
  */
 async function addUserAddress(req, res) {
-  const err = validationResult(req);
-  if (!err.isEmpty()) {
-    const [{ msg: message }] = err.errors;
-    return res.send({
-      code: 400,
-      message,
-    });
-  }
-
   const { address, state, city } = req.body;
   const { user } = req;
   const user_address = {

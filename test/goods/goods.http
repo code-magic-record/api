@@ -3,5 +3,5 @@
 
 ### 获取用户地址
 
-get {{url}}/get?page=1&pageSize=10
+get {{url}}/get_list?page=1&pageSize=10
 
