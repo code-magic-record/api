@@ -20,3 +20,24 @@ post {{url}}/add
     "name": "香蕉",
     "price": "1"
 }
+
+
+### 编辑商品
+
+post {{url}}/edit
+{{json}}
+
+{
+    "id": 1,
+    "name": "香蕉12",
+    "price": "1"
+}
+
+### 删除商品
+
+post {{url}}/delete
+{{json}}
+
+{
+    "id": 3
+}

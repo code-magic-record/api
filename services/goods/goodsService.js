@@ -35,7 +35,7 @@ async function getGoodsWithId(id) {
       .select("image_url")
       .where("goods_id", id);
     return {
-      ...goodsDetail,
+      ...goodsDetail[0],
       imgs: goodsImgs,
     };
   } catch (e) {
@@ -75,6 +75,29 @@ async function insertGoods(options) {
 }
 
 /**
+ * 更新商品
+ * @param {*} options
+ */
+async function updateGoods(options) {
+  const { categoryId, name, price, description, imgUrl, id } = options;
+  try {
+    const newGoods = {
+      category_id: categoryId,
+      name,
+      price,
+      description,
+      main_image_url: imgUrl,
+      update_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+    };
+    const result = await knex("goods").where("id", id).update(newGoods);
+    return result;
+  } catch (error) {
+    logger.error(error);
+    throw new Error("插入失败");
+  }
+}
+
+/**
  * 获取商品列表
  * @param {*} req
  * @param {*} res
@@ -104,6 +127,7 @@ async function getGoodsDetail(req, res) {
   const { id } = req.query;
   try {
     const data = await getGoodsWithId(id);
+
     if (!data.id) {
       return res.status(400).send({
         code: 0,
@@ -152,8 +176,74 @@ async function addGoods(req, res) {
   }
 }
 
+/**
+ * 编辑商品
+ * @param {*} req
+ * @param {*} res
+ */
+async function editGoods(req, res) {
+  const {
+    categoryId,
+    name,
+    price,
+    description = "",
+    imgUrl = "",
+    id,
+  } = req.body;
+  const newGoods = {
+    id,
+    categoryId,
+    name,
+    price,
+    description,
+    imgUrl,
+  };
+  try {
+    const result = await updateGoods(newGoods);
+    res.send({
+      code: 200,
+      messgae: "更新成功",
+    });
+  } catch (e) {
+    res.send({
+      code: 500,
+      message: "系统错误",
+    });
+  }
+}
+
+/**
+ * 删除商品
+ * @param {*} req
+ * @param {*} res
+ */
+async function delteGoods(req, res) {
+  try {
+    const { id } = req.body;
+    const deletedRows = await knex("goods").where("id", id).del();
+    if (deletedRows === 0) {
+      return res.status(400).send({
+        code: 0,
+        message: "当前商品不存在",
+      });
+    }
+    res.send({
+      code: 200,
+      message: "删除成功",
+    });
+  } catch (e) {
+    res.status(500).send({
+      code: 0,
+      message: "系统错误",
+    });
+    logger.error(e);
+  }
+}
+
 module.exports = {
   getGoodsList,
   getGoodsDetail,
   addGoods,
+  editGoods,
+  delteGoods,
 };

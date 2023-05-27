@@ -33,6 +33,9 @@ const goodsVaildtor = [
     .withMessage("商品价格必须是number"),
 ];
 
+const goodsIdVaildtor = [body("id").notEmpty().withMessage("商品id不能为空")];
+const editGoodsVaildtor = goodsIdVaildtor.concat(goodsVaildtor);
+
 router.get(
   "/list",
   validationMiddleware(getGoodsValidator),
@@ -47,5 +50,15 @@ router.get(
 
 // TODO: 先不做新增鉴权，后期超管才能新增
 router.post("/add", validationMiddleware(goodsVaildtor), service.addGoods); // 添加商品
+router.post(
+  "/edit",
+  validationMiddleware(editGoodsVaildtor),
+  service.editGoods
+); // 编辑商品
+router.post(
+  "/delete",
+  validationMiddleware(goodsIdVaildtor),
+  service.delteGoods
+); // 删除商品
 
 module.exports = router;
