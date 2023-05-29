@@ -1,0 +1,6 @@
+@url=http://localhost:8001/api/order
+@json=Content-Type: application/json
+
+### 获取订单列表
+
+get {{url}}/list
