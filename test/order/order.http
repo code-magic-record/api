@@ -4,3 +4,15 @@
 ### 获取订单列表
 
 get {{url}}/list
+
+
+### 用户下单
+
+post {{url}}/purchase
+{{json}}
+
+{
+  "address_id": 4,
+  "goods_list": [{ "goods_id": 1, "count": 100}, { "goods_id": 2, "count": 100}],
+  "total_price": 500
+}
