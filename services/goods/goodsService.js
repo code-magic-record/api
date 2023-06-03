@@ -1,6 +1,6 @@
-const dayjs = require("dayjs");
-const knex = require("../../db/index");
-const { logger } = require("../../middleware/loggerMiddleware");
+const dayjs = require('dayjs');
+const knex = require('../../db/index');
+const { logger } = require('../../middleware/loggerMiddleware');
 
 /**
  * 查询商品列表
@@ -10,15 +10,15 @@ const { logger } = require("../../middleware/loggerMiddleware");
 async function getGoodsWithPagination(options) {
   const { page, pageSize } = options;
   try {
-    const goods = await knex("goods")
-      .select("*")
+    const goods = await knex('goods')
+      .select('*')
       .offset((page - 1) * pageSize)
       .limit(pageSize);
 
     return goods;
   } catch (error) {
     logger.error(error);
-    throw new Error("获取列表失败");
+    throw new Error('获取列表失败');
   }
 }
 
@@ -28,19 +28,20 @@ async function getGoodsWithPagination(options) {
  */
 async function getGoodsWithId(id) {
   try {
-    const goodsDetail = await knex("goods")
-      .select("id", "name", "price", "description")
-      .where("id", id);
-    const goodsImgs = await knex("goods_images")
-      .select("image_url")
-      .where("goods_id", id);
+    const goodsDetail = await knex('goods')
+      .select('id', 'name', 'price', 'description')
+      .where('id', id);
+    const goodsImgs = await knex('goods_images')
+      .select('image_url')
+      .where('goods_id', id);
     return {
+      // eslint-disable-next-line node/no-unsupported-features/es-syntax
       ...goodsDetail[0],
       imgs: goodsImgs,
     };
   } catch (e) {
     logger.error(e);
-    throw new Error("查询失败");
+    throw new Error('查询失败');
   }
 }
 
@@ -52,8 +53,8 @@ async function insertGoods(options) {
   const { categoryId, name, price, description, imgUrl } = options;
   try {
     // 获取当前最大的 goods_id
-    const maxGoodsIdResult = await knex("goods")
-      .max("goods_id as maxGoodsId")
+    const maxGoodsIdResult = await knex('goods')
+      .max('goods_id as maxGoodsId')
       .first();
     const newGoodsId = (maxGoodsIdResult.maxGoodsId || 0) + 1;
     const newGoods = {
@@ -63,14 +64,14 @@ async function insertGoods(options) {
       price,
       description,
       main_image_url: imgUrl,
-      create_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
-      update_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      update_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     };
-    const result = await knex("goods").insert(newGoods);
+    const result = await knex('goods').insert(newGoods);
     return result;
   } catch (error) {
     logger.error(error);
-    throw new Error("插入失败");
+    throw new Error('插入失败');
   }
 }
 
@@ -87,13 +88,13 @@ async function updateGoods(options) {
       price,
       description,
       main_image_url: imgUrl,
-      update_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      update_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     };
-    const result = await knex("goods").where("id", id).update(newGoods);
+    const result = await knex('goods').where('id', id).update(newGoods);
     return result;
   } catch (error) {
     logger.error(error);
-    throw new Error("插入失败");
+    throw new Error('插入失败');
   }
 }
 
@@ -104,16 +105,17 @@ async function updateGoods(options) {
  */
 async function getGoodsList(req, res) {
   const { page = 1, pageSize = 20 } = req.query;
-  const result = await getGoodsWithPagination({ page, pageSize });
-  res.send({
-    code: 200,
-    data: result,
-  });
+
   try {
+    const result = await getGoodsWithPagination({ page, pageSize });
+    res.send({
+      code: 200,
+      data: result,
+    });
   } catch (e) {
     res.send({
       code: 500,
-      message: "获取列表失败",
+      message: '获取列表失败',
     });
   }
 }
@@ -131,7 +133,7 @@ async function getGoodsDetail(req, res) {
     if (!data.id) {
       return res.status(400).send({
         code: 0,
-        message: "商品不存在",
+        message: '商品不存在',
       });
     }
     res.send({
@@ -153,7 +155,7 @@ async function getGoodsDetail(req, res) {
  * @param {*} res
  */
 async function addGoods(req, res) {
-  const { categoryId, name, price, description = "", imgUrl = "" } = req.body;
+  const { categoryId, name, price, description = '', imgUrl = '' } = req.body;
   const newGoods = {
     categoryId,
     name,
@@ -162,11 +164,10 @@ async function addGoods(req, res) {
     imgUrl,
   };
   try {
-    const result = await insertGoods(newGoods);
-    console.log(result);
+    await insertGoods(newGoods);
     res.send({
       code: 200,
-      message: "新增成功",
+      message: '新增成功',
     });
   } catch (e) {
     res.status(500).send({
@@ -186,8 +187,8 @@ async function editGoods(req, res) {
     categoryId,
     name,
     price,
-    description = "",
-    imgUrl = "",
+    description = '',
+    imgUrl = '',
     id,
   } = req.body;
   const newGoods = {
@@ -199,15 +200,15 @@ async function editGoods(req, res) {
     imgUrl,
   };
   try {
-    const result = await updateGoods(newGoods);
+    await updateGoods(newGoods);
     res.send({
       code: 200,
-      messgae: "更新成功",
+      message: '更新成功',
     });
   } catch (e) {
     res.send({
       code: 500,
-      message: "系统错误",
+      message: '系统错误',
     });
   }
 }
@@ -217,24 +218,24 @@ async function editGoods(req, res) {
  * @param {*} req
  * @param {*} res
  */
-async function delteGoods(req, res) {
+async function deleteGoods(req, res) {
   try {
     const { id } = req.body;
-    const deletedRows = await knex("goods").where("id", id).del();
+    const deletedRows = await knex('goods').where('id', id).del();
     if (deletedRows === 0) {
       return res.status(400).send({
         code: 0,
-        message: "当前商品不存在",
+        message: '当前商品不存在',
       });
     }
     res.send({
       code: 200,
-      message: "删除成功",
+      message: '删除成功',
     });
   } catch (e) {
     res.status(500).send({
       code: 0,
-      message: "系统错误",
+      message: '系统错误',
     });
     logger.error(e);
   }
@@ -245,5 +246,5 @@ module.exports = {
   getGoodsDetail,
   addGoods,
   editGoods,
-  delteGoods,
+  deleteGoods,
 };

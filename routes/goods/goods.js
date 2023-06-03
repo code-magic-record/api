@@ -1,64 +1,64 @@
-const express = require("express");
-const service = require("../../services/goods/goodsService");
-const { query, body } = require("express-validator");
+const express = require('express');
+const service = require('../../services/goods/goodsService');
+const { query, body } = require('express-validator');
 const {
   validationMiddleware,
-} = require("../../middleware/validationMiddleware");
+} = require('../../middleware/validationMiddleware');
 
 const router = express.Router();
 
 const getGoodsValidator = [
-  query("page")
+  query('page')
     .notEmpty()
-    .withMessage("page不能为空")
+    .withMessage('page不能为空')
     .isInt({ gt: 0 })
-    .withMessage("page必须是大于0的整数"),
-  query("pageSize")
+    .withMessage('page必须是大于0的整数'),
+  query('pageSize')
     .notEmpty()
-    .withMessage("pageSize不能为空")
+    .withMessage('pageSize不能为空')
     .isInt({ gt: 0 })
-    .withMessage("pageSize必须是大于0的整数"),
+    .withMessage('pageSize必须是大于0的整数'),
 ];
 
 const getGoodsDetailVaildator = [
-  query("id").notEmpty().withMessage("商品id不能为空"),
+  query('id').notEmpty().withMessage('商品id不能为空'),
 ];
 
 const goodsVaildtor = [
-  body("name").notEmpty().withMessage("商品名称不能为空"),
-  body("price")
+  body('name').notEmpty().withMessage('商品名称不能为空'),
+  body('price')
     .notEmpty()
-    .withMessage("商品价格不能为空")
+    .withMessage('商品价格不能为空')
     .isNumeric()
-    .withMessage("商品价格必须是number"),
+    .withMessage('商品价格必须是number'),
 ];
 
-const goodsIdVaildtor = [body("id").notEmpty().withMessage("商品id不能为空")];
+const goodsIdVaildtor = [body('id').notEmpty().withMessage('商品id不能为空')];
 const editGoodsVaildtor = goodsIdVaildtor.concat(goodsVaildtor);
 
 router.get(
-  "/list",
+  '/list',
   validationMiddleware(getGoodsValidator),
-  service.getGoodsList
+  service.getGoodsList,
 ); // 获取商品列表
 
 router.get(
-  "/detail",
+  '/detail',
   validationMiddleware(getGoodsDetailVaildator),
-  service.getGoodsDetail
+  service.getGoodsDetail,
 ); // 获取商品详情
 
 // TODO: 先不做新增鉴权，后期超管才能新增
-router.post("/add", validationMiddleware(goodsVaildtor), service.addGoods); // 添加商品
+router.post('/add', validationMiddleware(goodsVaildtor), service.addGoods); // 添加商品
 router.post(
-  "/edit",
+  '/edit',
   validationMiddleware(editGoodsVaildtor),
-  service.editGoods
+  service.editGoods,
 ); // 编辑商品
 router.post(
-  "/delete",
+  '/delete',
   validationMiddleware(goodsIdVaildtor),
-  service.delteGoods
+  service.deleteGoods,
 ); // 删除商品
 
 module.exports = router;

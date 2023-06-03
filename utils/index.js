@@ -14,5 +14,5 @@ function generateOrderNumber() {
 }
 
 module.exports = {
-  generateOrderNumber
-}
+  generateOrderNumber,
+};

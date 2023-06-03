@@ -1,5 +1,5 @@
-const dotenv = require("dotenv");
-const redis = require("../redis");
+const dotenv = require('dotenv');
+const redis = require('../redis');
 dotenv.config();
 
 async function authMiddleware(req, res, next) {
@@ -7,7 +7,7 @@ async function authMiddleware(req, res, next) {
   if (!accessToken) {
     return res.status(401).json({
       code: 0,
-      message: "accessToken is missing",
+      message: 'accessToken is missing',
     });
   }
   try {
@@ -16,7 +16,7 @@ async function authMiddleware(req, res, next) {
     if (!user) {
       return res.status(401).json({
         code: 0,
-        message: "获取用户信息失败！",
+        message: '获取用户信息失败！',
       });
     }
     req.user = user; // 将用用户信息传递下去
@@ -24,7 +24,7 @@ async function authMiddleware(req, res, next) {
   } catch (err) {
     return res.status(401).json({
       code: 0,
-      message: "获取用户信息失败！",
+      message: '获取用户信息失败！',
     });
   }
 }

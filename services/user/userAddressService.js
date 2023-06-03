@@ -1,6 +1,6 @@
-const dayjs = require("dayjs");
-const knex = require("../../db/index");
-const { logger } = require("../../middleware/loggerMiddleware");
+const dayjs = require('dayjs');
+const knex = require('../../db/index');
+const { logger } = require('../../middleware/loggerMiddleware');
 
 /**
  * 查询地址根据userId
@@ -9,9 +9,9 @@ const { logger } = require("../../middleware/loggerMiddleware");
  */
 async function queryUserAddress(userId) {
   try {
-    const address = await knex("user_address")
-      .select("*")
-      .where("user_id", userId);
+    const address = await knex('user_address')
+      .select('*')
+      .where('user_id', userId);
     return address;
   } catch (e) {
     logger.error(e);
@@ -24,9 +24,9 @@ async function queryUserAddress(userId) {
  */
 async function queryUserAddressById(addressId) {
   try {
-    const address = await knex("user_address")
-      .select("*")
-      .where("id", addressId);
+    const address = await knex('user_address')
+      .select('*')
+      .where('id', addressId);
     return address;
   } catch (e) {
     logger.error(e);
@@ -46,14 +46,14 @@ async function insertUserAddress(options) {
       city,
       address,
       user_id,
-      create_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
-      update_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      create_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      update_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     };
-    const id = await knex("user_address").insert(user_address).returning("id");
+    const id = await knex('user_address').insert(user_address).returning('id');
     return id;
   } catch (error) {
     logger.info(error);
-    throw new Error("Error adding a new user");
+    throw new Error('Error adding a new user');
   }
 }
 
@@ -63,7 +63,7 @@ async function insertUserAddress(options) {
  */
 async function updateUserAddress(addressId) {
   try {
-    const deletedRows = await knex("user_address").where("id", addressId).del();
+    const deletedRows = await knex('user_address').where('id', addressId).del();
     if (deletedRows !== 0) {
       return true;
     }
@@ -108,14 +108,14 @@ async function addUserAddress(req, res) {
     if (result.length > 0) {
       return res.send({
         code: 200,
-        message: "插入成功",
+        message: '插入成功',
       });
     }
   } catch (e) {
     logger.error(e);
     return res.send({
       code: 500,
-      message: "数据插入失败",
+      message: '数据插入失败',
     });
   }
 }
@@ -156,7 +156,7 @@ async function editUserAddress(req, res) {
     if (!exit) {
       return res.send({
         code: 0,
-        message: "地址id错误",
+        message: '地址id错误',
       });
     }
     await updateUserAddress(id); // 删除地址
@@ -164,14 +164,14 @@ async function editUserAddress(req, res) {
     if (result.length > 0) {
       return res.send({
         code: 200,
-        message: "修改成功",
+        message: '修改成功',
       });
     }
   } catch (e) {
     logger.error(e);
     return res.send({
       code: 500,
-      message: "数据插入失败",
+      message: '数据插入失败',
     });
   }
 }
@@ -188,14 +188,14 @@ async function deleteUserAddress(req, res) {
     if (!exit) {
       return res.send({
         code: 0,
-        message: "地址不存在",
+        message: '地址不存在',
       });
     }
     const flag = await updateUserAddress(id); // 删除地址
     if (flag) {
       return res.send({
         code: 200,
-        message: "删除成功",
+        message: '删除成功',
       });
     }
   } catch (e) {
