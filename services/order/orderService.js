@@ -54,12 +54,15 @@ async function fetchPrice(goodsId) {
  */
 async function getOrderList(req, res) {
   const { id } = req.user;
+  const { status, page = 1, pageSize = 20 } = req.query
   try {
-    const result = await knex("orders").select("*").where("user_id", id);
-    // const goods = await knex("order_items").select("*").whereIn("order_id", result.map(item => item.id));
+    // 根据用户状态，分页查询订单列表
+    const total = await knex("orders").count("id", { as: "total" }).where("user_id", id).where("status", status).first();
+    const result = await knex("orders").select("*").where("user_id", id).where("status", status).limit(pageSize).offset((page - 1) * pageSize);
     res.send({
       code: 200,
-      data: result
+      data: result,
+      total: total.total,
     });
   } catch (e) {
     logger.error(e);
@@ -131,7 +134,34 @@ async function purchase(req, res) {
   }
 }
 
+/**
+ * 用户付款
+ * @param {*} req 
+ * @param {*} res 
+ */
+async function pay(req,res) {
+  // TODO 需要校验用户是否存在这个订单？
+  // TODO 简单的模拟付款
+  const { order_no } = req.body;
+  try {
+    await knex('orders').update({
+      status: 2,
+    }).where('order_no', order_no);
+    res.send({
+      code: 200,
+      message: '付款成功'
+    })
+  } catch(e) {
+    res.status(500).send({
+      code: 0,
+      message: '系统异常'
+    })
+  }
+ 
+}
+
 module.exports = {
   getOrderList,
   purchase,
+  pay
 };

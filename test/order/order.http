@@ -3,7 +3,7 @@
 
 ### 获取订单列表
 
-get {{url}}/list
+get {{url}}/list?status=1&page=1&pageSize=10
 
 
 ### 用户下单
@@ -12,7 +12,16 @@ post {{url}}/purchase
 {{json}}
 
 {
-  "address_id": 4,
-  "goods_list": [{ "goods_id": 1, "count": 100}, { "goods_id": 2, "count": 100}],
-  "total_price": 500
+  "address_id": 11,
+  "goods_list": [{ "goods_id": 2, "count": 400}, { "goods_id": 2, "count": 100}],
+  "total_price": 300
+}
+
+### 用户付款
+
+post {{url}}/pay
+{{json}}
+
+{
+  "order_no": "23060300008"
 }
