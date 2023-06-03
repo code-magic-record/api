@@ -157,11 +157,36 @@ async function pay(req,res) {
       message: '系统异常'
     })
   }
- 
 }
 
+/**
+ * 确认收货
+ * @param {*} req 
+ * @param {*} res 
+ */
+async function confirmGoods(req, res) {
+  // TODO: 模拟
+  const { order_no } = req.body
+
+  try {
+    await knex('orders').update({
+      status: 8,
+    }).where('order_no', order_no);
+    res.send({
+      code: 200,
+      message: '确认收货成功'
+    })
+
+  } catch(e) {
+    res.send({
+      code: 0,
+      message: '系统错误'
+    })
+  }
+}
 module.exports = {
   getOrderList,
   purchase,
-  pay
+  pay,
+  confirmGoods,
 };

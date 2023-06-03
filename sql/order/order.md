@@ -9,6 +9,7 @@
 | 5      | 已送达 |
 | 6      | 已取消 |
 | 7      | 已退款 |
+| 8      | 已完成 |
 
 ### 订单表（orders）
 
@@ -19,7 +20,7 @@
 | user_id     | int                                     | 用户 ID，外键引用 `user` 表中的 `id` |
 | create_date | datetime                                | 订单日期                             |
 | pay_date    | datetime                                | 付款日期                             |
-| status      | ENUM('1', '2', '3', '4', '5', '6', '7') | 订单状态                             |
+| status      | ENUM('1', '2', '3', '4', '5', '6', '7', '8') | 订单状态                             |
 | total_price | decimal(12,2)                           | 订单总价格                           |
 
 ### 订单商品表（order_items）

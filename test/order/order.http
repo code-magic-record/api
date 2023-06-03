@@ -25,3 +25,13 @@ post {{url}}/pay
 {
   "order_no": "23060300008"
 }
+
+
+### 用户确认收货
+
+post {{url}}/confirm
+{{json}}
+
+{
+  "order_no": "23060300008"
+}
