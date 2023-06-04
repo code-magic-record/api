@@ -22,7 +22,11 @@ const swaggerOptions = {
     ],
   },
 
-  apis: ['./routes/user/user.js'], // 指定包含路由定义的文件路径
+  apis: [
+    './routes/user/user.js',
+    './routes/user/user_address.js',
+    './routes/goods/goods.js',
+  ], // 指定包含路由定义的文件路径
 };
 
 // 生成 Swagger 规范

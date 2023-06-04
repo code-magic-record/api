@@ -15,7 +15,7 @@ const userValidator = [
 
 /**
  * @swagger
- * /api/user/post:
+ * /api/user/register:
  *   post:
  *     summary: 用户注册
  *     tags:
@@ -30,9 +30,11 @@ const userValidator = [
  *           properties:
  *             username:
  *               type: string
+ *               default: 'admin'
  *               description: 用户名
  *             password:
  *               type: string
+ *               default: '123456'
  *               description: 密码
  *     responses:
  *       200:
@@ -60,8 +62,10 @@ router.post('/register', validationMiddleware(userValidator), service.register);
  *             username:
  *               type: string
  *               description: 用户名
+ *               default: 'admin'
  *             password:
  *               type: string
+ *               default: '123456'
  *               description: 密码
  *     responses:
  *       200:

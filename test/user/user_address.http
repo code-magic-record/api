@@ -33,8 +33,8 @@ post {{url}}/edit/address
 {{json}}
 
 {
-  "id": "5",
+  "id": "11",
   "state": "湖北省",
-  "city": "大冶市",
-  "address": "下陆区铁山街道1223"
+  "city": "武汉市",
+  "address": "洪山区光谷之星"
 }

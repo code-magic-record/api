@@ -48,6 +48,7 @@ async function addUser(options) {
 async function register(req, res) {
   const { username, password, email, nickname, avatar } = req.body;
   try {
+    // TODO: 用户名和密码强度这里，真实项目中需要校验密码强度
     const newPassword = await md5.hash(password); // 密码加密
     const flag = await checkUserExists(username); // 判断是否存在
     if (flag) {

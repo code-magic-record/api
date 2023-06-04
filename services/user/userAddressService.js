@@ -22,11 +22,14 @@ async function queryUserAddress(userId) {
  * 根据address 查询地址
  * @param {*} addressId
  */
-async function queryUserAddressById(addressId) {
+async function queryUserAddressById(addressId, userId) {
   try {
     const address = await knex('user_address')
       .select('*')
+      .where('user_id', userId) // 同时校验userId
       .where('id', addressId);
+
+    console.log(address, 'address');
     return address;
   } catch (e) {
     logger.error(e);
@@ -121,13 +124,13 @@ async function addUserAddress(req, res) {
 }
 
 /**
- * 检测是否存在 存在返回ture, 不存在返回fasle
+ * 检测是否存在 存在返回true, 不存在返回false
  * @param {*} addressId
  * @returns
  */
-async function checkUserAddrssExist(addressId) {
+async function checkUserAddressExist(addressId, userId) {
   try {
-    const addressRow = await queryUserAddressById(addressId);
+    const addressRow = await queryUserAddressById(addressId, userId);
     if (addressRow.length === 0) {
       return false;
     }
@@ -152,16 +155,20 @@ async function editUserAddress(req, res) {
     user_id: user.id,
   };
   try {
-    const exit = await checkUserAddrssExist(id); // 检查地址是否存在
+    const exit = await checkUserAddressExist(id, user.id); // 检查地址是否存在
     if (!exit) {
       return res.send({
         code: 0,
         message: '地址id错误',
       });
     }
-    await updateUserAddress(id); // 删除地址
-    const result = await insertUserAddress(user_address);
-    if (result.length > 0) {
+    // TODO: 旧的思路，是删除用户地址，然后重新插入，但是这样会导致用户地址id变化
+    // await updateUserAddress(id); // 删除地址
+    // const result = await insertUserAddress(user_address);
+    const rows = await knex('user_address')
+      .where('id', id)
+      .update(user_address);
+    if (rows) {
       return res.send({
         code: 200,
         message: '修改成功',
@@ -171,7 +178,7 @@ async function editUserAddress(req, res) {
     logger.error(e);
     return res.send({
       code: 500,
-      message: '数据插入失败',
+      message: '修改失败',
     });
   }
 }
@@ -184,7 +191,8 @@ async function editUserAddress(req, res) {
 async function deleteUserAddress(req, res) {
   try {
     const { id } = req.body;
-    const exit = await checkUserAddrssExist(id); // 检查地址是否存在
+    const { user } = req;
+    const exit = await checkUserAddressExist(id, user.id); // 检查地址是否存在
     if (!exit) {
       return res.send({
         code: 0,

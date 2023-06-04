@@ -7,7 +7,7 @@ async function authMiddleware(req, res, next) {
   if (!accessToken) {
     return res.status(401).json({
       code: 0,
-      message: 'accessToken is missing',
+      message: '用户未登录，请先登录！',
     });
   }
   try {
