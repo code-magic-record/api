@@ -108,9 +108,11 @@ async function getGoodsList(req, res) {
 
   try {
     const result = await getGoodsWithPagination({ page, pageSize });
+    const total = await knex('goods').count('id as total').first();
     res.send({
       code: 200,
       data: result,
+      total: total.total,
     });
   } catch (e) {
     res.send({
