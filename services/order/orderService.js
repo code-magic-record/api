@@ -53,7 +53,7 @@ async function fetchPrice(goodsId) {
  */
 async function getOrderList(req, res) {
   const { id } = req.user;
-  const { status, page = 1, pageSize = 20 } = req.query;
+  const { status = '', page = 1, pageSize = 20 } = req.query;
   try {
     // 根据用户状态，分页查询订单列表
     const total = await knex('orders')
@@ -155,6 +155,7 @@ async function pay(req, res) {
     await knex('orders')
       .update({
         status: 2,
+        pay_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       })
       .where('order_no', order_no);
     res.send({

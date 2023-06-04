@@ -14,6 +14,8 @@ const swaggerOptions = {
     info: {
       title: 'API 文档',
       version: '1.0.0',
+      description:
+        'API 文档，这里简单实现了用户注册、登录、获取用户信息、获取商品列表、购买商品、获取订单列表等接口。如有疑问，可联系作者 - yaogengzhu',
     },
     servers: [
       {
@@ -26,6 +28,7 @@ const swaggerOptions = {
     './routes/user/user.js',
     './routes/user/user_address.js',
     './routes/goods/goods.js',
+    './routes/order/order.js',
   ], // 指定包含路由定义的文件路径
 };
 
