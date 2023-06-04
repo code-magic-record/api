@@ -1,6 +1,22 @@
 # API
 
-练习简单的 API 接口开发设计
+*练习简单的 API 接口开发设计*
+
+### 指引
+
+欢迎来到我的 api 仓库！这个仓库是一个基于 Express 框架、MySQL 数据库、Knex 查询构建器和 Redis 缓存的示例项目。
+
+快速开始：
+
+1. 拷贝 `.env.example` 文件，重命名为 `.env`，并修改其中的配置项。
+2. 安装mysql数据库，创建数据库，导入`sql`文件  表结构查看sql文件夹
+3. 安装依赖：`npm install`
+4. 启动项目：`npm run dev`
+
+
+### 目前实现的接口 API 进度
+
+[api在线文档](https://duowan.yaogeng.top/api-docs)
 
 user
 
