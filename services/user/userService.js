@@ -105,7 +105,6 @@ const storeUserDataInRedis = async (key, userData, expiresIn) => {
     const userDataString = JSON.stringify(userData);
     // 设置用户数据和令牌到Redis并设置过期时间
     await redis.set(key, userDataString, 'EX', expiresIn);
-    console.log('userDataString', userDataString);
     logger.info('User data and JWT token stored in Redis');
   } catch (error) {
     logger.error('Error storing user data and JWT token in Redis:');

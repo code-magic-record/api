@@ -1,0 +1,13 @@
+@url=http://localhost:8001/api/auth
+@json=Content-Type: application/json
+
+
+### 管理员登录
+
+post {{url}}/login
+{{json}}
+
+{
+    "username":"yaogengzhu",
+    "password":"123456"
+}

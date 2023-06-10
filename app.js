@@ -25,6 +25,7 @@ const swaggerOptions = {
   },
 
   apis: [
+    './routes/auth/index.js',
     './routes/user/user.js',
     './routes/user/user_address.js',
     './routes/goods/goods.js',

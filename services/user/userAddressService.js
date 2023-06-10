@@ -28,8 +28,6 @@ async function queryUserAddressById(addressId, userId) {
       .select('*')
       .where('user_id', userId) // 同时校验userId
       .where('id', addressId);
-
-    console.log(address, 'address');
     return address;
   } catch (e) {
     logger.error(e);
