@@ -8,6 +8,11 @@ services:
     container_name: api-v1
     ports:
       - 8001:8001
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+          cpus: "2"
     environment:
       - TZ=Asia/Shanghai # 时区设置为东八区
     volumes:
