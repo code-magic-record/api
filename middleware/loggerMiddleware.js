@@ -32,7 +32,7 @@ const dailyRotateFileTransport = new DailyRotateFile({
 
 // 创建 logger 实例
 const logger = winston.createLogger({
-  level: 'info',
+  level: 'debug',
   format: logFormat,
   transports: [dailyRotateFileTransport],
 });
