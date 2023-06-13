@@ -18,7 +18,7 @@ const userValidator = [
  *   post:
  *     summary: 管理员登录
  *     tags:
- *       - admin
+ *       - Admin
  *     parameters:
  *       - in: body
  *         name: credentials
