@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const swaggerJSDoc = require('swagger-jsdoc'); // 接口文档
 const swaggerUi = require('swagger-ui-express'); // 接口文档UI
 const routes = require('./routes/index');
+const cors = require('cors');
 const { loggerMiddleware } = require('./middleware/loggerMiddleware');
 
 const app = express();
@@ -49,6 +50,8 @@ app.use('/', (_, res) => {
   const dom = `<a href="/api-docs">api文档</a>`;
   res.send(dom);
 });
+
+app.use(cors());
 
 app.listen(8001, () => {
   console.log('http://localhost:8001');
